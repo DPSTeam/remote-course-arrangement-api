@@ -15,8 +15,14 @@ class DGrst
 		$this->RST["response"]["rst_time"] = (int)time(); //RESTful API UNIX time
 	}
 	
-	/* This method can parse the GET request and POST request */
+	/* This method can parse requests */
 	public function parse()
+	{
+		
+	}
+	
+	/* This function will generate a secret key via dgkey() */
+	public function dgkey()
 	{
 		
 	}
@@ -24,7 +30,13 @@ class DGrst
 	/* add a new param for response array */
 	public function add_param($param, $content)
 	{
+		if(isset($this->RST["response"][$param]))
+		{
+			return false;
+		}
 		
+		$this->RST["response"][$param] = $content;
+		return true;
 	}
 	
 	/* Get response array */
