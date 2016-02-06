@@ -4,5 +4,5 @@
 	var_dump($classHandle->response());
 	require('dgsql.php');
 	$classHandle=new DGsql();
-	print("Done");
+	print("Done\n");
 ?>
