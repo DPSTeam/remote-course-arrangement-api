@@ -27,6 +27,12 @@ class DGrst
 		
 	}
 	
+	/* This function provides a method to verified a public key is true or not */
+	public function verified($publicKey)
+	{
+		
+	}
+	
 	/* add a new param for response array */
 	public function add_param($param, $content)
 	{
