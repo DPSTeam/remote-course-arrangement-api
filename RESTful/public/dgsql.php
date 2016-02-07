@@ -11,10 +11,10 @@ class DGsql
 	{
 		$this->DGSQL["sqlType"] = $sqlType; // Datbase type: MySQL, ...
 		$this->DGSQL["database"] = array();
-		$this->DGSQL["database"]["location"] = $DGDATABASE["location"]; // The var
-		$this->DGSQL["database"]["username"] = $DGDATABASE["username"]; // $DGDATABASE
-		$this->DGSQL["database"]["password"] = $DGDATABASE["password"]; // is defined
-		$this->DGSQL["database"]["dbname"] = $DGDATABASE["dbname"]; // by private/secret.php
+		$this->DGSQL["database"]["location"] = $GLOBALS["DGDATABASE"]["location"]; // The var
+		$this->DGSQL["database"]["username"] = $GLOBALS["DGDATABASE"]["username"]; // $DGDATABASE
+		$this->DGSQL["database"]["password"] = $GLOBALS["DGDATABASE"]["password"]; // is defined
+		$this->DGSQL["database"]["dbname"] = $GLOBALS["DGDATABASE"]["dbname"]; // by private/secret.php
 	}
 	
 	/* This function can excute the $sqlQuery and return the result cluster */

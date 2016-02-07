@@ -3,10 +3,10 @@
 //2016-02-07
 
 // This global var is used to public/dgsql.php
-global $DGDATABASE = array();
+$GLOBALS["DGDATABASE"] = array();
 
-$DGDATABASE["location"] = "localhost";
-$DGDATABASE["username"] = "username";
-$DGDATABASE["password"] = "password";
-$DGDATABASE["dbname"] = "database";
+$GLOBALS["DGDATABASE"]["location"] = "localhost";
+$GLOBALS["DGDATABASE"]["username"] = "username";
+$GLOBALS["DGDATABASE"]["password"] = "password";
+$GLOBALS["DGDATABASE"]["dbname"] = "database";
 ?>
