@@ -51,7 +51,7 @@ class DGsql_base
 			if($returnResult == true)
 			{
 				$fetch_results = mysql_fetch_object($res);
-				mysql_free_result();
+				mysql_free_result($res);
 			}
 			
 			mysql_close();
@@ -73,12 +73,23 @@ class DGsql extends DGsql_base
 {
 	public function config_add($configName, $configValue=null)
 	{
-		$sql="INSERT INTO `".$this->DGSQL["database"]["dbname"]
+		$sql = "INSERT INTO `".$this->DGSQL["database"]["dbname"]
 			."`.`".$this->DGSQL["database"]["prefix"]
 			."config` (`config_id`, `config_name`, `config_value`)"
 			."VALUES ('', '".$configName."', '".$configValue."');";
 		
 		$this->sql($sql, false); // Not need return vars
+	}
+
+	public function config_query($configName)
+	{
+		$sql = "SELECT * FROM `".$this->DGSQL["database"]["dbname"]
+			."`.`".$this->DGSQL["database"]["prefix"]
+			."config` WHERE `config_name` = \""
+			.$configName."\";";
+		
+		$res = $this->sql($sql);
+		return $res->config_value;
 	}
 }
 

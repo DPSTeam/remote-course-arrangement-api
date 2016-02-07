@@ -10,6 +10,7 @@
 		"site_name" => "Another DGSite",
 		"site_lang" => "zh-CN",
 		"site_charset" => "utf-8",
+		"api_version" => "1.0",
 		"api_status" => "OK",
 		"api_query_freq" => "unlimited",
 		"api_query_times" => "1"
