@@ -56,7 +56,7 @@ class DGsql_base
 			if($returnResult == true)
 			{
 				$fetch_results = array();
-				while($result = mysql_fetch_object($res))
+				while($result = mysql_fetch_array($res, MYSQL_ASSOC))
 				{
 					array_push($fetch_results, $result);
 				}
@@ -80,6 +80,15 @@ class DGsql_base
 /* This class provides some useful methods for some requirments */
 class DGsql extends DGsql_base
 {
+	public function count_item($tableName)
+	{
+		$sql = "SELECT COUNT(*) FROM `".$this->DGSQL["database"]["prefix"]
+			.$tableName."`;";
+		
+		$res = $this->sql($sql);
+		return $res[0]["COUNT(*)"];
+	}
+	
 	public function config_add($configName, $configValue=null)
 	{
 		$sql = "INSERT INTO `".$this->DGSQL["database"]["dbname"]
@@ -98,7 +107,7 @@ class DGsql extends DGsql_base
 			.$configName."\";";
 		
 		$res = $this->sql($sql);
-		return $res->config_value;
+		return $res[0]["config_value"];
 	}
 	
 	public function session_add($sessionKey)
