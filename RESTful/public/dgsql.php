@@ -17,6 +17,21 @@ class DGsql
 		$this->DGSQL["database"]["dbname"] = $GLOBALS["DGDATABASE"]["dbname"]; // by private/secret.php
 	}
 	
+	/* This function can get the MySQL status */
+	public function status()
+	{
+		if($this->DGSQL["sqlType"] == "MySQL")
+		{
+			$sqlHandle = mysql_connect(
+				$this->DGSQL["database"]["location"],
+				$this->DGSQL["database"]["username"],
+				$this->DGSQL["database"]["password"]);
+			
+			$status = explode("  ", mysql_stat($sqlHandle));
+			return $status;
+		}
+	}
+	
 	/* This function can excute the $sqlQuery and return the result cluster */
 	public function sql($sqlQuery)
 	{
@@ -26,6 +41,7 @@ class DGsql
 				$this->DGSQL["database"]["location"],
 				$this->DGSQL["database"]["username"],
 				$this->DGSQL["database"]["password"]);
+			
 			mysql_select_db(
 				$this->DGSQL["database"]["dbname"]);
 			
