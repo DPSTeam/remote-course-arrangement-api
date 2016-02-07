@@ -34,7 +34,7 @@ class DGsql_base
 	}
 	
 	/* This function can excute the $sqlQuery and return the result cluster */
-	public function sql($sqlQuery)
+	public function sql($sqlQuery, $returnResult = true)
 	{
 		if($this->DGSQL["sqlType"] == "MySQL")
 		{
@@ -47,12 +47,23 @@ class DGsql_base
 				$this->DGSQL["database"]["dbname"]);
 			
 			$res = mysql_query($sqlQuery);
-			$fetch_results = mysql_fetch_object($res);
 			
-			mysql_free_result();
+			if($returnResult == true)
+			{
+				$fetch_results = mysql_fetch_object($res);
+				mysql_free_result();
+			}
+			
 			mysql_close();
 			
-			return $fetch_results;
+			if($returnResult == true)
+			{
+				return $fetch_results;
+			}
+			else
+			{
+				return;
+			}
 		}
 	}
 }
@@ -62,11 +73,12 @@ class DGsql extends DGsql_base
 {
 	public function config_add($configName, $configValue=null)
 	{
-		$this->sql(
-			"INSERT INTO `".$this->DGSQL["database"]["dbname"]
+		$sql="INSERT INTO `".$this->DGSQL["database"]["dbname"]
 			."`.`".$this->DGSQL["database"]["prefix"]
 			."config` (`config_id`, `config_name`, `config_value`)"
-			."VALUES ('', '".$configName."', '".$configValue."');");
+			."VALUES ('', '".$configName."', '".$configValue."');";
+		
+		$this->sql($sql, false); // Not need return vars
 	}
 }
 
