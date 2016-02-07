@@ -3,3 +3,6 @@
 
 # Documention
 https://github.com/DPSTeam/remote-course-arrangement-api/wiki
+
+# Copyright and legal information
+Copyright (C) 2016 DGideas
