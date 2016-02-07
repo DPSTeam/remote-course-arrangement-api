@@ -1,9 +1,9 @@
 <?php
 //Author:@DGideas
-//2016-02-06
+//2016-02-07
 
 /* This class provide a easy way to access to the database */
-class DGsql
+class DGsql_base
 {
 	protected $DGSQL = array();
 	
@@ -15,6 +15,7 @@ class DGsql
 		$this->DGSQL["database"]["username"] = $GLOBALS["DGDATABASE"]["username"]; // $DGDATABASE
 		$this->DGSQL["database"]["password"] = $GLOBALS["DGDATABASE"]["password"]; // is defined
 		$this->DGSQL["database"]["dbname"] = $GLOBALS["DGDATABASE"]["dbname"]; // by private/secret.php
+		$this->DGSQL["database"]["prefix"] = $GLOBALS["HOOKS_DATABASE"]["prefix"]; //Database prefix
 	}
 	
 	/* This function can get the MySQL status */
@@ -53,6 +54,19 @@ class DGsql
 			
 			return $fetch_results;
 		}
+	}
+}
+
+/* This class provides some useful methods for some requirments */
+class DGsql extends DGsql_base
+{
+	public function config_add($configName, $configValue=null)
+	{
+		$this->sql(
+			"INSERT INTO `".$this->DGSQL["database"]["dbname"]
+			."`.`".$this->DGSQL["database"]["prefix"]
+			."config` (`config_id`, `config_name`, `config_value`)"
+			."VALUES ('', '".$configName."', '".$configValue."');");
 	}
 }
 
