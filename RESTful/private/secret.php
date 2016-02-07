@@ -1,6 +1,6 @@
 <?php
 //Author:@DGideas
-//2016-02-07
+//2016-02-08
 
 // This global var is used to public/dgsql.php
 $GLOBALS["DGDATABASE"] = array();
