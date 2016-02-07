@@ -7,8 +7,9 @@ require("../../include.php");
 $requestHandle = new DGrst();
 $sqlHandle = new DGsql();
 
-$requestHandle->add_param("dgkey", $requestHandle->dgkey());
-$requestHandle->add_param("code", "200");
-print(json_encode($requestHandle->response()));
+$key = $requestHandle->dgkey();
+$requestHandle->add_param("dgkey", $key);
 
+print(json_encode($requestHandle->response()));
+$sqlHandle->session_add($key);
 ?>

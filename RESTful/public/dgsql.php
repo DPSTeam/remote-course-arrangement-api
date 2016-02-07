@@ -11,11 +11,16 @@ class DGsql_base
 	{
 		$this->DGSQL["sqlType"] = $sqlType; // Datbase type: MySQL, ...
 		$this->DGSQL["database"] = array();
-		$this->DGSQL["database"]["location"] = $GLOBALS["DGDATABASE"]["location"]; // The var
-		$this->DGSQL["database"]["username"] = $GLOBALS["DGDATABASE"]["username"]; // $DGDATABASE
-		$this->DGSQL["database"]["password"] = $GLOBALS["DGDATABASE"]["password"]; // is defined
-		$this->DGSQL["database"]["dbname"] = $GLOBALS["DGDATABASE"]["dbname"]; // by private/secret.php
-		$this->DGSQL["database"]["prefix"] = $GLOBALS["HOOKS_DATABASE"]["prefix"]; //Database prefix
+		$this->DGSQL["database"]["location"]
+			= $GLOBALS["DGDATABASE"]["location"]; // The var
+		$this->DGSQL["database"]["username"]
+			= $GLOBALS["DGDATABASE"]["username"]; // $DGDATABASE
+		$this->DGSQL["database"]["password"]
+			= $GLOBALS["DGDATABASE"]["password"]; // is defined
+		$this->DGSQL["database"]["dbname"]
+			= $GLOBALS["DGDATABASE"]["dbname"]; // by private/secret.php
+		$this->DGSQL["database"]["prefix"]
+			= $GLOBALS["HOOKS_DATABASE"]["prefix"]; //Database prefix
 	}
 	
 	/* This function can get the MySQL status */
@@ -50,7 +55,11 @@ class DGsql_base
 			
 			if($returnResult == true)
 			{
-				$fetch_results = mysql_fetch_object($res);
+				$fetch_results = array();
+				while($result = mysql_fetch_object($res))
+				{
+					array_push($fetch_results, $result);
+				}
 				mysql_free_result($res);
 			}
 			
@@ -90,6 +99,26 @@ class DGsql extends DGsql_base
 		
 		$res = $this->sql($sql);
 		return $res->config_value;
+	}
+	
+	public function session_add($sessionKey)
+	{
+		if(isset($_SERVER["REMOTE_ADDR"]))
+		{
+			$sessionIP = $_SERVER["REMOTE_ADDR"];
+		}
+		else
+		{
+			$sessionIP = '127.0.0.1'; // localhost
+		}
+		
+		$sql = "INSERT INTO `".$this->DGSQL["database"]["dbname"]
+			."`.`".$this->DGSQL["database"]["prefix"]
+			."session` (`session_id`, `session_date`, `session_key`,"
+			."`session_ip`, `session_status`, `session_user`) VALUES"
+			."(NULL, '".date("Y-m-d")."', '".$sessionKey."', '".$sessionIP
+			."', 'QUERY', NULL);";
+		$this->sql($sql, false);
 	}
 }
 
