@@ -11,8 +11,9 @@ class DGrst
 	{
 		$this->RST["request"] = array(); //Request array, for request
 		$this->RST["response"] = array(); // Response array, for callback
-		$this->RST["response"]["version"] = "1.0"; //RESTful API version
+		$this->RST["response"]["rst_version"] = "1.0"; //RESTful API version
 		$this->RST["response"]["rst_time"] = (int)time(); //RESTful API UNIX time
+		$this->RST["response"]["rst_code"] = "200"; //HTTP 200 OK
 	}
 	
 	/* This method can parse requests */
@@ -24,7 +25,8 @@ class DGrst
 	/* This function will generate a secret key via dgkey() */
 	public function dgkey()
 	{
-		
+		$dgKey = md5((string)$_SERVER["REQUEST_TIME"]);
+		return $dgKey;
 	}
 	
 	/* This function provides a method to verified a public key is true or not */
@@ -43,6 +45,12 @@ class DGrst
 		
 		$this->RST["response"][$param] = $content;
 		return true;
+	}
+	
+	/* Change the HTTP response code */
+	public function code($HTTPCode)
+	{
+		$this->RST["response"]["rst_code"] = $HTTPCode;
 	}
 	
 	/* Get response array */

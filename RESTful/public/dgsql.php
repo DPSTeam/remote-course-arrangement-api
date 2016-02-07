@@ -5,7 +5,7 @@
 /* This class provide a easy way to access to the database */
 class DGsql
 {
-	protected $DGSQL=array();
+	protected $DGSQL = array();
 	
 	function __construct($sqlType="MySQL")
 	{
@@ -20,7 +20,7 @@ class DGsql
 	/* This function can excute the $sqlQuery and return the result cluster */
 	public function sql($sqlQuery)
 	{
-		if($this->DGSQL["sqlType"]=="MySQL")
+		if($this->DGSQL["sqlType"] == "MySQL")
 		{
 			$sqlHandle = mysql_connect(
 				$this->DGSQL["database"]["location"],
