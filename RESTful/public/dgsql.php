@@ -123,9 +123,9 @@ class DGsql extends DGsql_base
 		
 		$sql = "INSERT INTO `".$this->DGSQL["database"]["dbname"]
 			."`.`".$this->DGSQL["database"]["prefix"]
-			."session` (`session_id`, `session_date`, `session_key`,"
+			."session` (`session_id`, `session_time`, `session_key`,"
 			."`session_ip`, `session_status`, `session_user`) VALUES"
-			."(NULL, '".date("Y-m-d")."', '".$sessionKey."', '".$sessionIP
+			."(NULL, '".time()."', '".$sessionKey."', '".$sessionIP
 			."', 'QUERY', NULL);";
 		$this->sql($sql, false);
 	}
