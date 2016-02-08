@@ -1,6 +1,6 @@
 <?php
 //Author:@DGideas
-//2016-02-06
+//2016-02-08
 
 // DGrst is a class for PHP based RESTful API driver.
 class DGrst
@@ -38,12 +38,14 @@ class DGrst
 	/* add a new param for response array */
 	public function add_param($param, $content)
 	{
-		if(isset($this->RST["response"][$param]))
+		if($content == null)
 		{
-			return false;
+			unset($this->RST["response"][$param]);
 		}
-		
-		$this->RST["response"][$param] = $content;
+		else
+		{
+			$this->RST["response"][$param] = $content;
+		}
 		return true;
 	}
 	
@@ -55,6 +57,12 @@ class DGrst
 		{
 			$this->RST["response"]["rst_reason"] = $reason;
 		}
+	}
+	
+	/* This function returns the HTTP_response_code */
+	public function get_code()
+	{
+		return $this->RST["response"]["rst_code"];
 	}
 	
 	/* Get response array */

@@ -11,6 +11,11 @@ $sqlHandle->session_clean();
 $key = $requestHandle->token();
 $requestHandle->add_param("token", $key);
 
+if(!$sqlHandle->session_add($key))
+{
+	$requestHandle->code("403", "Request too freqently");
+	$requestHandle->add_param("token", null);
+}
+
 print(json_encode($requestHandle->response()));
-$sqlHandle->session_add($key);
 ?>

@@ -91,7 +91,8 @@ class DGsql extends DGsql_base
 		return $res[0]["COUNT(*)"];
 	}
 	
-	public function config_add($configName, $configValue=null)
+	// Safety: for internal use
+	public function config_add($configName, $configValue = null)
 	{
 		$sql = "INSERT INTO `".$this->DGSQL["database"]["dbname"]
 			."`.`".$this->DGSQL["database"]["prefix"]
@@ -101,9 +102,11 @@ class DGsql extends DGsql_base
 		$this->sql($sql, false); // Not need return vars
 	}
 
+	// Safety: for internal use
 	public function config_query($configName)
 	{
-		$sql = "SELECT * FROM `".$this->DGSQL["database"]["dbname"]
+		$sql = "SELECT `config_value` FROM `"
+			.$this->DGSQL["database"]["dbname"]
 			."`.`".$this->DGSQL["database"]["prefix"]
 			."config` WHERE `config_name` = \""
 			.$configName."\";";
@@ -112,6 +115,7 @@ class DGsql extends DGsql_base
 		return $res[0]["config_value"];
 	}
 	
+	// Safety: for internal use
 	public function session_add($sessionToken)
 	{
 		if(isset($_SERVER["REMOTE_ADDR"]))
@@ -123,6 +127,17 @@ class DGsql extends DGsql_base
 			$sessionIP = '127.0.0.1'; // localhost
 		}
 		
+		// Analyze duplicate
+		$sql = "SELECT COUNT(*) FROM `".$this->DGSQL["database"]["dbname"]
+			."`.`".$this->DGSQL["database"]["prefix"]
+			."session` WHERE `session_token` = \"".$sessionToken
+			."\";";
+		$res = $this->sql($sql);
+		if($res[0]["COUNT(*)"] != 0)
+		{
+			return false;
+		}
+		
 		$sql = "INSERT INTO `".$this->DGSQL["database"]["dbname"]
 			."`.`".$this->DGSQL["database"]["prefix"]
 			."session` (`session_id`, `session_time`, `session_token`,"
@@ -130,10 +145,14 @@ class DGsql extends DGsql_base
 			."(NULL, '".time()."', '".$sessionToken."', '".$sessionIP
 			."', 'QUERY', NULL);";
 		$this->sql($sql, false);
+		return true;
 	}
     
+	// Unsafety: use escape function
 	public function session_verified($sessionToken)
 	{
+		$sessionToken = mysql_escape_string($sessionToken); // For safety
+		
 		$sql = "SELECT * FROM `".$this->DGSQL["database"]["dbname"]
 			."`.`".$this->DGSQL["database"]["prefix"]
 			."session` WHERE `session_token`=\"".$sessionToken."\";";
@@ -154,6 +173,29 @@ class DGsql extends DGsql_base
 		}
 	}
 	
+	public function session_change_status($sessionToken, $status, $relatedUser = null)
+	{
+		if($relatedUser == null)
+		{
+			$relatedUser = "NULL";
+		}
+		else
+		{
+			$relatedUser = "\"".$relatedUser."\"";
+		}
+		
+		$sql = "UPDATE `".$this->DGSQL["database"]["dbname"]
+			."`.`".$this->DGSQL["database"]["prefix"]
+			."session` SET `session_status` = \"".$status
+			."\", `session_user` = ".$relatedUser
+			." WHERE `".$this->DGSQL["database"]["prefix"]
+			."session`.`session_token` = \"".$sessionToken
+			."\";";
+		
+		$this->sql($sql, false);
+		return;
+	}
+	
     public function session_clean()
 	{
 		$sql = "SELECT * FROM `".$this->DGSQL["database"]["dbname"]."`.`"
@@ -170,9 +212,46 @@ class DGsql extends DGsql_base
 				$this->sql($sql, false);
 			}
 		}
+		$sql = "OPTIMIZE TABLE `".$this->DGSQL["database"]["dbname"]
+			."_session`;";
+		$this->sql($sql, false);
 		return;
 	}
 	
+	// Unsafety
+	public function user_get_id($userName)
+	{
+		$userName = mysql_escape_string($userName);
+		$sql = "SELECT `user_id` FROM `".$this->DGSQL["database"]["dbname"]
+			."`.`".$this->DGSQL["database"]["prefix"]."user` WHERE"
+			."`user_name` = \"".$userName."\";";
+		$res = $this->sql($sql);
+		if($res != false)
+		{
+			return $res[0]["user_id"];
+		}
+		return false;
+	}
+	
+	// Unsafety
+	public function user_login($userId, $userPassword, $sessionToken)
+	{
+		$sessionToken = mysql_escape_string($sessionToken);
+		$sql = "SELECT `user_password` FROM `"
+			.$this->DGSQL["database"]["dbname"]."`.`"
+			.$this->DGSQL["database"]["prefix"]."user` WHERE `user_id` = \""
+			.$userId."\";";
+		$res = $this->sql($sql);
+		if($res[0]["user_password"]==hash("sha512", $userPassword))
+		{
+			$this->session_change_status($sessionToken, "LOGIN", $userId);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
 ?>
