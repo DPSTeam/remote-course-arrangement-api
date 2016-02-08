@@ -7,6 +7,7 @@ require("../../include.php");
 $requestHandle = new DGrst();
 $sqlHandle = new DGsql();
 
+$sqlHandle->session_clean();
 $key = $requestHandle->dgkey();
 $requestHandle->add_param("dgkey", $key);
 

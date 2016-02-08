@@ -21,6 +21,8 @@ class DGsql_base
 			= $GLOBALS["DGDATABASE"]["dbname"]; // by private/secret.php
 		$this->DGSQL["database"]["prefix"]
 			= $GLOBALS["HOOKS_DATABASE"]["prefix"]; //Database prefix
+		$this->DGSQL["database"]["expired"]
+			= $GLOBALS["HOOKS_SESSION"]["max_expired_time"];
 	}
 	
 	/* This function can get the MySQL status */
@@ -128,6 +130,25 @@ class DGsql extends DGsql_base
 			."(NULL, '".time()."', '".$sessionKey."', '".$sessionIP
 			."', 'QUERY', NULL);";
 		$this->sql($sql, false);
+	}
+    
+    public function session_clean()
+	{
+		$sql = "SELECT * FROM `".$this->DGSQL["database"]["dbname"]."`.`"
+			.$this->DGSQL["database"]["prefix"]."session`;";
+		foreach($this->sql($sql) as $res)
+		{
+			if(time() - $res["session_time"]
+				>= $this->DGSQL["database"]["expired"])
+			{
+				$sql = "DELETE FROM `".$this->DGSQL["database"]["dbname"]
+					."`.`".$this->DGSQL["database"]["prefix"]
+					."session` WHERE `".$this->DGSQL["database"]["prefix"]
+					."session`.`session_id` = ".$res["session_id"].";";
+				$this->sql($sql, false);
+			}
+		}
+		return;
 	}
 }
 
