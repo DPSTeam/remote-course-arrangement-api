@@ -1,6 +1,6 @@
 <?php
 //Author:@DGideas
-//2016-02-07
+//2016-02-08
 
 /* This class provide a easy way to access to the database */
 class DGsql_base
@@ -112,7 +112,7 @@ class DGsql extends DGsql_base
 		return $res[0]["config_value"];
 	}
 	
-	public function session_add($sessionKey)
+	public function session_add($sessionToken)
 	{
 		if(isset($_SERVER["REMOTE_ADDR"]))
 		{
@@ -125,13 +125,35 @@ class DGsql extends DGsql_base
 		
 		$sql = "INSERT INTO `".$this->DGSQL["database"]["dbname"]
 			."`.`".$this->DGSQL["database"]["prefix"]
-			."session` (`session_id`, `session_time`, `session_key`,"
+			."session` (`session_id`, `session_time`, `session_token`,"
 			."`session_ip`, `session_status`, `session_user`) VALUES"
-			."(NULL, '".time()."', '".$sessionKey."', '".$sessionIP
+			."(NULL, '".time()."', '".$sessionToken."', '".$sessionIP
 			."', 'QUERY', NULL);";
 		$this->sql($sql, false);
 	}
     
+	public function session_verified($sessionToken)
+	{
+		$sql = "SELECT * FROM `".$this->DGSQL["database"]["dbname"]
+			."`.`".$this->DGSQL["database"]["prefix"]
+			."session` WHERE `session_token`=\"".$sessionToken."\";";
+		$return = array();
+		$exist = false;
+		foreach($this->sql($sql) as $res)
+		{
+			$exist = true;
+			array_push($return, $res);
+		}
+		if($exist)
+		{
+			return $return;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
     public function session_clean()
 	{
 		$sql = "SELECT * FROM `".$this->DGSQL["database"]["dbname"]."`.`"
@@ -150,6 +172,7 @@ class DGsql extends DGsql_base
 		}
 		return;
 	}
+	
 }
 
 ?>

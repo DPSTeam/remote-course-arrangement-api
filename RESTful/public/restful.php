@@ -23,10 +23,10 @@ class DGrst
 	}
 	
 	/* This function will generate a secret key via dgkey() */
-	public function dgkey()
+	public function token()
 	{
-		$dgKey = md5((string)$_SERVER["REQUEST_TIME"]);
-		return $dgKey;
+		$token = md5((string)$_SERVER["REQUEST_TIME"]);
+		return $token;
 	}
 	
 	/* This function provides a method to verified a public key is true or not */
@@ -48,9 +48,13 @@ class DGrst
 	}
 	
 	/* Change the HTTP response code */
-	public function code($HTTPCode)
+	public function code($HTTPCode, $reason = null)
 	{
 		$this->RST["response"]["rst_code"] = $HTTPCode;
+		if($reason != null)
+		{
+			$this->RST["response"]["rst_reason"] = $reason;
+		}
 	}
 	
 	/* Get response array */
