@@ -68,6 +68,7 @@ class DGrst
 	/* Get response array */
 	public function response()
 	{
+		header($GLOBALS["HTTP_STATUS"][$this->RST["response"]["rst_code"]]);
 		return $this->RST["response"];
 	}
 }

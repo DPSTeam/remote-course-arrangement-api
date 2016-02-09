@@ -1,6 +1,6 @@
 <?php
 //Author:@DGideas
-//2016-02-08
+//2016-02-09
 
 /* This class provide a easy way to access to the database */
 class DGsql_base

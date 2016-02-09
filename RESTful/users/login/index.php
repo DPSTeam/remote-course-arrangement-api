@@ -39,7 +39,14 @@ else
 if($queryHandle->get_code() == "200")
 {
 	$userId = $sqlHandle->user_get_id($_POST["username"]);
-	var_dump($sqlHandle->user_login($userId, $_POST["password"], $_POST["token"]));
+	if($sqlHandle->user_login($userId, $_POST["password"], $_POST["token"]))
+	{
+		$requestHandle->code("200", "Success");
+	}
+	else
+	{
+		$requestHandle->code("403", "Authentication failed");
+	}
 }
 
 print(json_encode($queryHandle->response()));
