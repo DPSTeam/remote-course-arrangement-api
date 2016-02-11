@@ -1,11 +1,11 @@
 <?php
 //Author:@DGideas
-//2016-02-08
+//2016-02-11
 
 require("../../include.php");
 
-$queryHandle=new DGrst();
-$sqlHandle=new DGsql();
+$queryHandle = new DGrst();
+$sqlHandle = new DGsql();
 
 $sqlHandle->session_clean();
 
@@ -39,17 +39,20 @@ else
 if($queryHandle->get_code() == "200")
 {
 	$userId = $sqlHandle->user_get_id($_POST["username"]);
-	if($userId = null)
+	if($userId == null)
 	{
-		$requestHandle->code("403", "Authentication failed");
-	}
-	if($sqlHandle->user_login($userId, $_POST["password"], $_POST["token"]))
-	{
-		$requestHandle->code("200", "Success");
+		$queryHandle->code("403", "Authentication failed");
 	}
 	else
 	{
-		$requestHandle->code("403", "Authentication failed");
+		if($sqlHandle->user_login($userId, $_POST["password"], $_POST["token"]))
+		{
+			$queryHandle->code("200", "Success");
+		}
+		else
+		{
+			$queryHandle->code("403", "Authentication failed");
+		}
 	}
 }
 
