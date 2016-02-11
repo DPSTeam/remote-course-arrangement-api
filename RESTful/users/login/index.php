@@ -12,7 +12,7 @@ $sqlHandle->session_clean();
 if(!isset($_POST["username"]) || !isset($_POST["password"])
 	|| !isset($_POST["token"]))
 {
-	$queryHandle->code('403', 'Bad arguments');
+	$queryHandle->code('400', 'Bad arguments');
 }
 else
 {
