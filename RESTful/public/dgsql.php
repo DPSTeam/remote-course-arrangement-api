@@ -1,6 +1,6 @@
 <?php
 //Author:@DGideas
-//2016-02-09
+//2016-02-11
 
 /* This class provide a easy way to access to the database */
 class DGsql_base
@@ -241,9 +241,7 @@ class DGsql extends DGsql_base
 			.$this->DGSQL["database"]["dbname"]."`.`"
 			.$this->DGSQL["database"]["prefix"]."user` WHERE `user_id` = \""
 			.$userId."\";";
-		print($sql);
 		$res = $this->sql($sql);
-		var_dump($res);
 		if($res[0]["user_password"] == hash("sha512", $userPassword))
 		{
 			$this->session_change_status($sessionToken, "LOGIN", $userId);
