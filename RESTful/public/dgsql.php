@@ -241,8 +241,10 @@ class DGsql extends DGsql_base
 			.$this->DGSQL["database"]["dbname"]."`.`"
 			.$this->DGSQL["database"]["prefix"]."user` WHERE `user_id` = \""
 			.$userId."\";";
+		print($sql);
 		$res = $this->sql($sql);
-		if($res[0]["user_password"]==hash("sha512", $userPassword))
+		var_dump($res);
+		if($res[0]["user_password"] == hash("sha512", $userPassword))
 		{
 			$this->session_change_status($sessionToken, "LOGIN", $userId);
 			return true;

@@ -39,6 +39,10 @@ else
 if($queryHandle->get_code() == "200")
 {
 	$userId = $sqlHandle->user_get_id($_POST["username"]);
+	if($userId = null)
+	{
+		$requestHandle->code("403", "Authentication failed");
+	}
 	if($sqlHandle->user_login($userId, $_POST["password"], $_POST["token"]))
 	{
 		$requestHandle->code("200", "Success");
